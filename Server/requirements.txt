@@ -1,5 +1,5 @@
 fitz
-PyMuPDF
+pymupdf
 fastapi
 sqlalchemy
 langchain_openai
