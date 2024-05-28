@@ -1,0 +1,9 @@
+fitz
+PyMuPDF
+fastapi
+sqlalchemy
+shutil
+langchain_openai
+langchain
+pydantic
+python-dotenv
