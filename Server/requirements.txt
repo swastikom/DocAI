@@ -1,4 +1,4 @@
-pymupdf
+pypdf
 fastapi
 sqlalchemy
 langchain_openai

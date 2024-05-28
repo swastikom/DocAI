@@ -6,7 +6,7 @@ from fastapi.middleware.cors import CORSMiddleware
 import os
 import shutil
 import models, schemas, crud
-import fitz
+from pypdf import PdfReader
 
 
 # Create the database tables
@@ -65,13 +65,14 @@ async def get_pdf_text(document_id: int, request: schemas.QuestionRequest, db: S
     if not document:
         raise HTTPException(status_code=404, detail="Document not found.")
     
+    
     # Extract text from the PDF file
     pdf_path = document.file_path
     try:
-        doc = fitz.open(pdf_path)
+        reader = PdfReader(pdf_path)
         text = ""
-        for page in doc:
-            text += page.get_text()
+        for page in reader.pages:
+            text += page.extract_text()
         
         answer = answer_question(text, request.question)
         return {"document_id": document_id, "answer": answer}
