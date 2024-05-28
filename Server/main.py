@@ -93,3 +93,8 @@ async def delete_pdf(document_id: int, db: Session = Depends(get_db)):
     crud.delete_document(db=db, document_id=document_id)
     
     return {"detail": "Document deleted successfully"}
+
+if __name__ == "__main__":
+    import uvicorn
+    port = int(os.getenv("PORT", 8000))
+    uvicorn.run(app, host="0.0.0.0", port=port)
