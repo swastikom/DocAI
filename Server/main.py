@@ -50,7 +50,15 @@ async def upload_file(file: UploadFile = File(...), db: Session = Depends(get_db
     if file.content_type != 'application/pdf':
         raise HTTPException(status_code=400, detail="Only PDF files are allowed.")
     
-    # Save the file to the local filesystem
+    # Check for existing document and delete it
+    existing_documents = crud.get_documents(db)
+    for doc in existing_documents:
+        file_path = doc.file_path
+        if os.path.exists(file_path):
+            os.remove(file_path)
+        crud.delete_document(db=db, document_id=doc.id)
+    
+    # Save the new file to the local filesystem
     file_location = os.path.join(UPLOAD_DIRECTORY, file.filename)
     with open(file_location, "wb") as f:
         shutil.copyfileobj(file.file, f)
@@ -86,7 +94,6 @@ async def get_pdf_text(document_id: int, request: schemas.QuestionRequest, db: S
         if not text:
             raise HTTPException(status_code=400, detail="No text extracted from the PDF.")
         
-     
         answer = answer_question(text, request.question)
         return {"document_id": document_id, "answer": answer}
     except Exception as e:

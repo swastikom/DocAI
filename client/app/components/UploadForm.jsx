@@ -1,13 +1,15 @@
-
 "use client";
 
 import { useState } from "react";
-import { CiCirclePlus } from "react-icons/ci";
+import { CiCirclePlus  } from "react-icons/ci";
+import { FaRegFile } from "react-icons/fa";
+
 
 const UploadForm = () => {
   const [file, setFile] = useState(null);
   const [submit, setSubmit] = useState(false);
-  const [result, setResult] = useState(null)
+  const [loading, setLoading] = useState(false);
+  const [result, setResult] = useState(null);
 
   const handleFileChange = (e) => {
     const selectedFile = e.target.files[0];
@@ -21,9 +23,9 @@ const UploadForm = () => {
   };
 
   const handleSubmit = async (e) => {
-    setSubmit(false);
-    setFile(null);
     e.preventDefault();
+    setLoading(true);
+    setSubmit(false);
 
     const formData = new FormData();
     formData.append("file", file);
@@ -34,18 +36,19 @@ const UploadForm = () => {
         body: formData,
       });
 
-      
-
       if (response.ok) {
         console.log("File uploaded successfully");
-        
         const res = await response.json();
+        console.log(res);
         setResult(res);
       } else {
         console.error("Failed to upload file");
       }
     } catch (error) {
       console.error("Error uploading file:", error);
+    } finally {
+      setLoading(false);
+      setFile(null);
     }
   };
 
@@ -54,24 +57,28 @@ const UploadForm = () => {
     setFile(null);
   };
 
-  const getTruncatedFileName = () => {
-    if (file) {
-      const fileName = file.name;
-      const extensionIndex = fileName.lastIndexOf(".");
-      const truncatedFileName =
-        fileName.substring(0, 5) + "..." + fileName.substring(extensionIndex);
+  const getTruncatedFileName = (filename) => {
+    if (filename) {
+      const extensionIndex = filename.lastIndexOf(".");
+      const extension = filename.substring(extensionIndex);
+      const truncatedFileName = filename.substring(0, 5) + "..." + extension;
       return truncatedFileName;
     }
     return "";
   };
 
   return (
-    <form onSubmit={handleSubmit} className="flex items-center gap-2">
-      {result && (
-        <div className="truncate text-sm mr-2">{result.fileName}</div>
+    <form onSubmit={handleSubmit} className="flex items-center gap-4">
+      {loading && <div className="text-sm mr-2">Loading...</div>}
+      {result && !loading && (
+        <div className="truncate text-sm mr-2 flex items-center gap-2 text-green-700">
+          <div className="items-center flex justify-center rounded-sm border-dotted text-green-700 p-1 border-[1px] border-green-700  "><FaRegFile /></div>  {getTruncatedFileName(result.filename)}
+        </div>
       )}
       {file ? (
-        <div className="font-semibold text-md bg-white border-[1.5px] border-black rounded-lg px-5 py-2 w-fit">{getTruncatedFileName()}</div>
+        <div className="font-semibold text-md bg-white border-[1.5px] border-black rounded-lg px-5 py-2 w-fit">
+          {getTruncatedFileName(file.name)}
+        </div>
       ) : (
         <label htmlFor="file-upload" className="file-upload-label">
           <div className="cursor-pointer font-semibold text-md bg-white border-[1.5px] border-black rounded-lg px-5 py-2 w-fit">
