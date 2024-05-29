@@ -6,3 +6,4 @@ langchain
 pydantic
 python-dotenv
 langchain_community
+faiss-cpu
