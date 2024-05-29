@@ -39,7 +39,11 @@ def answer_question(raw_text, question):
     
     # Using invoke() instead of run()
     result = chain.invoke({"input_documents": docs, "question": question})
-    return result
+    
+    # Extract just the answer string
+    answer = result["output_text"]
+    
+    return answer
 
 # # Test the function
 # if __name__ == "__main__":
