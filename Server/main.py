@@ -50,7 +50,7 @@ async def upload_file(file: UploadFile = File(...), db: Session = Depends(get_db
     if file.content_type != 'application/pdf':
         raise HTTPException(status_code=400, detail="Only PDF files are allowed.")
     
-    # Check for existing document and delete it
+    # Fetch all documents and delete them
     existing_documents = crud.get_documents(db)
     for doc in existing_documents:
         file_path = doc.file_path
