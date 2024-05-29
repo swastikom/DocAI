@@ -11,6 +11,9 @@ def create_document(db: Session, document: schemas.DocumentCreate):
 def get_document(db: Session, document_id: int):
     return db.query(models.Document).filter(models.Document.id == document_id).first()
 
+def get_documents(db: Session):
+    return db.query(models.Document).all()
+
 def delete_document(db: Session, document_id: int):
     document = db.query(models.Document).filter(models.Document.id == document_id).first()
     if document:
