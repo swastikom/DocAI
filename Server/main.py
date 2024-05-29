@@ -1,21 +1,24 @@
-from fastapi import FastAPI, File, UploadFile, HTTPException, Depends
-from sqlalchemy.orm import Session
-from functions import answer_question
-from database import SessionLocal, engine
-from fastapi.middleware.cors import CORSMiddleware
 import os
 import shutil
-import models, schemas, crud
+import logging
+from fastapi import FastAPI, File, UploadFile, HTTPException, Depends
+from fastapi.middleware.cors import CORSMiddleware
+from sqlalchemy.orm import Session
 from pypdf import PdfReader
-import fitz
+from database import SessionLocal, engine
+import models, schemas, crud
+from functions import answer_question
 
+# Configure logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 # Create the database tables
 models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
 
-
+# Allow CORS for frontend
 origins = [
     "http://localhost:3000",  # Add your frontend's origin here
 ]
@@ -27,8 +30,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
-
 
 # Dependency to get DB session
 def get_db():
@@ -66,32 +67,41 @@ async def get_pdf_text(document_id: int, request: schemas.QuestionRequest, db: S
     if not document:
         raise HTTPException(status_code=404, detail="Document not found.")
     
-    
-    # Extract text from the PDF file
     pdf_path = document.file_path
+
+    if not os.path.exists(pdf_path):
+        raise HTTPException(status_code=404, detail=f"PDF file not found at {pdf_path}")
+    
     try:
+        logger.info(f"Opening PDF file at {pdf_path}")
         reader = PdfReader(pdf_path)
         text = ""
-        for page in reader.pages:
-            text += page.extract_text()
+        for page_number, page in enumerate(reader.pages, start=1):
+            page_text = page.extract_text()
+            if page_text:
+                text += page_text
+            else:
+                logger.warning(f"Failed to extract text from page {page_number}")
         
+        if not text:
+            raise HTTPException(status_code=400, detail="No text extracted from the PDF.")
+        
+     
         answer = answer_question(text, request.question)
         return {"document_id": document_id, "answer": answer}
     except Exception as e:
-        raise HTTPException(status_code=500, detail="Error processing PDF file.")
-    
+        raise HTTPException(status_code=500, detail=f"Error processing PDF file: {e}")
+
 @app.delete("/text/{document_id}/")
 async def delete_pdf(document_id: int, db: Session = Depends(get_db)):
     document = crud.get_document(db, document_id=document_id)
     if not document:
         raise HTTPException(status_code=404, detail="Document not found.")
     
-    # Delete the file from the local filesystem
     file_path = document.file_path
     if os.path.exists(file_path):
         os.remove(file_path)
     
-    # Remove the document entry from the database
     crud.delete_document(db=db, document_id=document_id)
     
     return {"detail": "Document deleted successfully"}
