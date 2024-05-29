@@ -36,14 +36,4 @@ def answer_question(raw_text, question):
     chain = load_qa_chain(openai, chain_type="stuff")
 
     docs = document_search.similarity_search(question)
-    
-    # Using invoke() instead of run()
-    result = chain.invoke({"input_documents": docs, "question": question})
-    return result
-
-# # Test the function
-# if __name__ == "__main__":
-#     raw_text = "Your text here..."
-#     question = "Your question here..."
-#     answer = answer_question(raw_text, question)
-#     print(answer)
+    return chain.run(input_documents=docs, question=question)
