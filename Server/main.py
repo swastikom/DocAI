@@ -7,6 +7,7 @@ import os
 import shutil
 import models, schemas, crud
 from pypdf import PdfReader
+import fitz
 
 
 # Create the database tables
