@@ -2,6 +2,24 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer utilities {
+  /* Chrome, Safari and Opera */
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .no-scrollbar {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
+}
+
+@layer base {
+  .card{
+    @apply p-[1.5em]  border-[1.5px] bg-white shadow-md  rounded-lg text-slate-500 text-2xl h-[9em] w-[15em]
+  }
+}
+
 
 body{
   height: 100vh;
