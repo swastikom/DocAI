@@ -113,6 +113,22 @@ async def delete_pdf(document_id: int, db: Session = Depends(get_db)):
     
     return {"detail": "Document deleted successfully"}
 
+@app.get("/document/first")
+async def get_first_document(db: Session = Depends(get_db)):
+    document_id = 1  # Specify the ID you want to fetch
+    document = crud.get_document_by_id(db, document_id)
+    if not document:
+        return "no document"
+    return document
+    # {
+    # "id": 1,
+    # "filename": "example.pdf",
+    # "file_path": "uploaded_files/example.pdf"
+    # }
+
+
+
+
 if __name__ == "__main__":
     import uvicorn
     port = int(os.getenv("PORT", 8000))

@@ -1,5 +1,3 @@
-import Image from "next/image";
-import UploadForm from "./components/UploadForm";
 import Navbar from "./components/Navbar";
 
 export default function Home() {

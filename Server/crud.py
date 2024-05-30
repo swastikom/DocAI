@@ -19,3 +19,6 @@ def delete_document(db: Session, document_id: int):
     if document:
         db.delete(document)
         db.commit()
+
+def get_document_by_id(db: Session, document_id: int):
+    return db.query(models.Document).filter(models.Document.id == document_id).first()
