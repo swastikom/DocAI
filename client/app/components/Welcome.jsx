@@ -10,7 +10,7 @@ const Welcome = () => {
         <h1 className="lg:text-[5em] md:text-[4em] sm:text-[2em] font-bold mb-4 text-slate-700">
           Welcome User!
         </h1>
-        <p className="lg:text-[3em] md:text-[1.5em] sm:text-[0.6em] text-[#33a87d] relative w-[max-content] font-mono
+        <p className="lg:text-[3em] md:text-[1.5em] sm:text-[0.9em] text-[#33a87d] relative w-[max-content] font-mono
 before:absolute before:inset-0 before:bg-[white]
 before:animate-typewriter
 after:absolute after:inset-0 after:w-[0.125em] after:animate-caret

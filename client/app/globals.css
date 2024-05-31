@@ -16,7 +16,7 @@
 
 @layer base {
   .card{
-    @apply md:mt-5 md:mb-5 sm:mt-5 sm:mb-5 lg:mt-0 lg:mb-0 p-[1.5em]  border-[1.5px] bg-white shadow-md  rounded-lg text-slate-500 text-2xl lg:h-[9em] lg:w-[15em] md:h-[9em] md:w-[12em] transform  sm:w-[7em]  transition duration-300 hover:scale-105
+    @apply md:mt-5 md:mb-5 sm:mt-5 sm:mb-5 lg:mt-0 lg:mb-0 p-[1.5em]  border-[1.5px] bg-white shadow-md  rounded-lg text-slate-500 text-2xl lg:h-[9em] lg:w-[15em] md:h-[9em] md:w-[12em] transform  sm:w-[12em]  transition duration-300 hover:scale-105
   }
 }
 
