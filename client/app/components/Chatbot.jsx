@@ -105,7 +105,7 @@ const Chatbot = (props) => {
   };
 
   return (
-    <div className="w-[70%] mx-auto p-4 flex flex-col h-screen pt-[4em]">
+    <div className="w-[100%] mx-auto p-4 flex flex-col h-screen pt-[4em]">
       {showWelcome && <Welcome />}
       {!showWelcome && (
         <>
