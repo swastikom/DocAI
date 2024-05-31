@@ -21,7 +21,7 @@ app = FastAPI()
 # Allow CORS for frontend
 origins = [
     "http://localhost:3000",  # Add your frontend's origin here
-    "https://doc-ai-indol.vercel.app/"
+    "https://doc-ai-indol.vercel.app"
 ]
 
 app.add_middleware(
