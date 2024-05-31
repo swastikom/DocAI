@@ -51,7 +51,7 @@ const Chatbot = (props) => {
       setError("Please enter a message."); // Set error message
       setTimeout(() => {
         setError(null);
-      }, 7000);
+      }, 4000);
       return; // Stop further execution
     }
 
@@ -60,7 +60,7 @@ const Chatbot = (props) => {
       setError("Document ID is missing."); // Set error message
       setTimeout(() => {
         setError(null);
-      }, 7000);
+      }, 4000);
       return; // Stop further execution
     }
 
@@ -100,7 +100,7 @@ const Chatbot = (props) => {
       // Clear the error message after 7 seconds
       setTimeout(() => {
         setError(null);
-      }, 7000);
+      }, 4000);
     }
   };
 
@@ -138,13 +138,14 @@ const Chatbot = (props) => {
                   )}{" "}
                 </div>
                 <div className="w-[100%] mt-[7px]">{msg.text}</div>
+                
               </div>
             ))}
             {/* Render loading indicator if loading state is true */}
             {load && <Chatload />}
             {/* Render error message if error state is not null */}
             {error && (
-              <div className="px-5 py-2 my-2 text-white bg-red-500 rounded-lg w-fit">
+              <div className="${isVisible ? 'animate-fadein' : 'animate-fadeout'} px-5 py-2 my-2 text-white bg-red-500 rounded-lg w-fit">
                 {error}
               </div>
             )}

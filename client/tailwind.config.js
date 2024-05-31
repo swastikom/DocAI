@@ -12,6 +12,20 @@ module.exports = {
         "gradient-conic":
           "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
       },
+      animation: {
+        typewriter: 'typewriter 5s steps(1000) forwards',
+        caret: 'typewriter 5s steps(1000) forwards, steps(1000) infinite 2s ',
+        
+      },
+      keyframes: {
+        typewriter: {
+          to: {
+            left: '100%',
+          },
+        },
+        
+        
+      },
     },
     screens: {
       'sm': '0px',

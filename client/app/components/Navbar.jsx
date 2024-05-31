@@ -87,6 +87,7 @@ const Navbar = ({ onFileUpload }) => {
         const successMessage = "File uploaded successfully: " + data.filename;
         setMessage(successMessage);
         onFileUpload(successMessage); // Send message to parent
+        localStorage.clear();
         window.location.reload();
       } else {
         const errorData = await response.json();
@@ -113,7 +114,7 @@ const Navbar = ({ onFileUpload }) => {
   };
 
   return (
-    <div className="flex items-center px-10 py-4 fixed shadow-md w-full bg-white justify-between">
+    <div className="flex items-center px-10 py-4 fixed shadow-md w-full bg-white justify-between z-50">
       <Link href="/">
         <Image src={logo} alt="Logo" height={100} width={100} />
       </Link>

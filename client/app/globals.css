@@ -16,15 +16,24 @@
 
 @layer base {
   .card{
-    @apply md:mt-5 md:mb-5 sm:mt-5 sm:mb-5 lg:mt-0 lg:mb-0 p-[1.5em]  border-[1.5px] bg-white shadow-md  rounded-lg text-slate-500 text-2xl h-[9em] w-[15em]
+    @apply md:mt-5 md:mb-5 sm:mt-5 sm:mb-5 lg:mt-0 lg:mb-0 p-[1.5em]  border-[1.5px] bg-white shadow-md  rounded-lg text-slate-500 text-2xl lg:h-[9em] lg:w-[15em] md:h-[9em] md:w-[12em] transform  sm:w-[7em]  transition duration-300 hover:scale-105
   }
 }
 
 
 body{
   height: 100vh;
-  .element-class::-webkit-scrollbar {
-    display: none; /* For Chrome, Safari, and Opera */
-  }
-
+  width: 100vw;
 }
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.example::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.example {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
