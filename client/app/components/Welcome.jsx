@@ -21,7 +21,7 @@ const Welcome = () => {
           </div>
           <div className="card">
             <RiQuestionAnswerFill className="mt-3 mb-2" spacing={7} color="#3B82F6" size={40}/>
-            Ask your Question aboout the pdf to Bot
+            Ask your Question about the pdf to Bot
           </div>
           <div className="card">
             <AiFillThunderbolt className="mt-3 mb-2" color="#FDE047" spacing={7}  size={40}/>
