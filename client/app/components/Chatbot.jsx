@@ -1,3 +1,5 @@
+"use client"
+
 import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import { LuSendHorizonal } from "react-icons/lu";
@@ -9,13 +11,13 @@ import AI from "@/public/AI.png";
 import User from "@/public/User.png";
 
 const Chatbot = (props) => {
-  const [messages, setMessages] = useState([]);
-  const [inputText, setInputText] = useState("");
-  const [error, setError] = useState(null);
-  const documentId = props.data; // Replace with the actual document ID
-  const chatWindowRef = useRef(null);
-  const [showWelcome, setShowWelcome] = useState(!documentId); // Set initial state based on documentId
-  const [load, setLoad] = useState(false);
+  const [messages, setMessages] = useState([]); // State to hold chat messages
+  const [inputText, setInputText] = useState(""); // State for input text
+  const [error, setError] = useState(null); // State for error messages
+  const documentId = props.data; // Document ID passed from props
+  const chatWindowRef = useRef(null); // Ref for chat window to enable scrolling
+  const [showWelcome, setShowWelcome] = useState(!documentId); // State to control the welcome message visibility
+  const [load, setLoad] = useState(false); // State to indicate loading status
 
   // Function to scroll chat window to the bottom
   const scrollToBottom = () => {
@@ -34,13 +36,13 @@ const Chatbot = (props) => {
 
   useEffect(() => {
     if (!documentId) {
-      localStorage.removeItem("chatHistory");
+      localStorage.removeItem("chatHistory"); // Clear chat history if no document ID
       return;
     }
 
-    const chatHistory = JSON.parse(localStorage.getItem("chatHistory"));
+    const chatHistory = JSON.parse(localStorage.getItem("chatHistory")); // Load chat history from local storage
     if (chatHistory) {
-      setMessages(chatHistory);
+      setMessages(chatHistory); // Set chat history in state
       setShowWelcome(false); // Hide welcome message if there's a chat history
     }
   }, [documentId]);
@@ -48,31 +50,30 @@ const Chatbot = (props) => {
   const handleMessageSend = async () => {
     // Check if the input message is empty
     if (inputText.trim() === "") {
-      setError("Please enter a message."); // Set error message
+      setError("Please enter a message."); // Set error message for empty input
       setTimeout(() => {
-        setError(null);
+        setError(null); // Clear error message after 4 seconds
       }, 4000);
       return; // Stop further execution
     }
 
     // Check if the document ID is provided
     if (!documentId) {
-      setError("Document ID is missing."); // Set error message
+      setError("Document ID is missing."); // Set error message for missing document ID
       setTimeout(() => {
-        setError(null);
+        setError(null); // Clear error message after 4 seconds
       }, 4000);
       return; // Stop further execution
     }
 
-    const userMessage = { text: inputText, fromUser: true };
-    setInputText("");
+    const userMessage = { text: inputText, fromUser: true }; // Create user message object
+    setInputText(""); // Clear input text
     setShowWelcome(false); // Hide welcome message when the user sends a message
 
     try {
       // Add user's message to chat history
       const updatedMessages = [...messages, userMessage];
-
-      setLoad(true);
+      setLoad(true); // Set loading state to true
 
       // Make API request to get bot's response
       const response = await axios.post(
@@ -81,9 +82,8 @@ const Chatbot = (props) => {
           question: inputText,
         }
       );
-      const botResponse = response.data.answer;
+      const botResponse = response.data.answer; // Get bot's response from API
 
-      // Add bot's response to chat history along with
       // Add bot's response to chat history along with user's message
       const botMessage = { text: botResponse, fromUser: false };
       updatedMessages.push(botMessage);
@@ -92,12 +92,12 @@ const Chatbot = (props) => {
       setMessages(updatedMessages);
       localStorage.setItem("chatHistory", JSON.stringify(updatedMessages));
       setError(null); // Reset error state if no error occurs
-      setLoad(false);
+      setLoad(false); // Set loading state to false
     } catch (error) {
       console.error("Error fetching bot response:", error);
       setError("Error fetching bot response. Please try again."); // Set error message
-      setLoad(false);
-      // Clear the error message after 7 seconds
+      setLoad(false); // Set loading state to false
+      // Clear the error message after 4 seconds
       setTimeout(() => {
         setError(null);
       }, 4000);
@@ -106,7 +106,7 @@ const Chatbot = (props) => {
 
   return (
     <div className="w-[100%] mx-auto p-4 flex flex-col h-screen pt-[4em]">
-      {showWelcome && <Welcome />}
+      {showWelcome && <Welcome />} {/* Render Welcome component if showWelcome is true */}
       {!showWelcome && (
         <>
           <div
@@ -138,7 +138,6 @@ const Chatbot = (props) => {
                   )}{" "}
                 </div>
                 <div className="w-[100%] mt-[7px]">{msg.text}</div>
-                
               </div>
             ))}
             {/* Render loading indicator if loading state is true */}
