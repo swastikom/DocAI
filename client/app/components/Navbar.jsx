@@ -126,6 +126,8 @@ const Navbar = ({ onFileUpload }) => {
           ) : (
             <div>
               <div className="flex items-center gap-3 justify-center">
+                
+                <h1 className="text-[#4ADE80] lg:text-md sm:text-sm md:text-sm flex items-center gap-1">
                 {data?.id && (
                   <FaRegFile
                     color="#4ADE80"
@@ -133,7 +135,6 @@ const Navbar = ({ onFileUpload }) => {
                     className="p-[3px] border-dotted border-[#4ADE80] border-2 rounded-md"
                   />
                 )}
-                <h1 className="text-[#4ADE80] lg:text-md sm:text-sm md:text-sm">
                   {data.filename ? truncateFilename(data.filename) : ""}
                 </h1>
 

@@ -150,8 +150,8 @@ const Chatbot = (props) => {
               </div>
             )}
           </div>
-          
-            <div className="flex mt-2 mb-7 mx-20 shadow-md rounded-md sticky bottom-0">
+          <div className="pb-7 sticky bottom-0 bg-white">
+            <div className="flex mt-2 shadow-md rounded-md">
               <input
                 type="text"
                 className="flex-1 rounded-l-lg border-t mr-0 border-b border-l text-gray-800 border-gray-200 bg-[#f6f7f9] py-2 px-4 placeholder-gray-400 focus:outline-none"
@@ -166,7 +166,7 @@ const Chatbot = (props) => {
                 <LuSendHorizonal />
               </button>
             </div>
-          
+          </div>
         </>
       )}
     </div>
