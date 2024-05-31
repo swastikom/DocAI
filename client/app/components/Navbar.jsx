@@ -114,9 +114,9 @@ const Navbar = ({ onFileUpload }) => {
   };
 
   return (
-    <div className="flex items-center px-10 py-4 fixed shadow-md w-full bg-white justify-between z-50">
+    <div className="flex items-center px-8 py-4 fixed shadow-md w-full bg-white justify-between z-50">
       <Link href="/">
-        <Image src={logo} alt="Logo" height={100} width={100} />
+        <Image src={logo} alt="Logo" height={100} width={100} className="pr-3" />
       </Link>
 
       <div>
@@ -127,7 +127,7 @@ const Navbar = ({ onFileUpload }) => {
             <div>
               <div className="flex items-center gap-3 justify-center">
                 
-                <h1 className="text-[#4ADE80] lg:text-md sm:text-sm md:text-sm flex items-center gap-1">
+                <h1 className="text-[#4ADE80] lg:text-md sm:text-[0.6em] md:text-sm flex items-center gap-1">
                 {data?.id && (
                   <FaRegFile
                     color="#4ADE80"
