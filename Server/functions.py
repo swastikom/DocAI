@@ -19,33 +19,37 @@ def answer_question(raw_text, question):
     # Initialize the OpenAI object with the API key
     openai = OpenAI(api_key=api_key)
 
-    # We need to split the text using Character Text Split such that it should not increase token size
+    # Split the text into chunks using a character-based splitter
+    # The chunks should be small enough to avoid exceeding token limits
     text_splitter = CharacterTextSplitter(
-        separator="\n",
-        chunk_size=800,
-        chunk_overlap=200,
-        length_function=len,
+        separator="\n",  # Split the text at newline characters
+        chunk_size=800,  # Maximum size of each chunk
+        chunk_overlap=200,  # Overlap between consecutive chunks
+        length_function=len,  # Function to calculate the length of each chunk
     )
-    texts = text_splitter.split_text(raw_text)
+    texts = text_splitter.split_text(raw_text)  # Split the raw text into chunks
 
     # Download embeddings from OpenAI
     embeddings = OpenAIEmbeddings(api_key=api_key)
 
+    # Create a FAISS index from the text chunks and their embeddings
     document_search = FAISS.from_texts(texts, embeddings)
 
+    # Load the question-answering chain with the OpenAI model
     chain = load_qa_chain(openai, chain_type="stuff")
 
+    # Perform a similarity search on the documents to find the most relevant chunks
     docs = document_search.similarity_search(question)
     
-    # Using invoke() instead of run()
+    # Use the question-answering chain to generate an answer based on the relevant documents
     result = chain.invoke({"input_documents": docs, "question": question})
     
-    # Extract just the answer string
+    # Extract the answer text from the result
     answer = result["output_text"]
     
     return answer
 
-# # Test the function
+# Uncomment the following lines to test the function
 # if __name__ == "__main__":
 #     raw_text = "Your text here..."
 #     question = "Your question here..."

@@ -20,8 +20,8 @@ app = FastAPI()
 
 # Allow CORS for frontend
 origins = [
-    "http://localhost:3000",  # Add your frontend's origin here
-    "https://doc-ai-indol.vercel.app"
+    "http://localhost:3000", # Local frontend Origin
+    "https://doc-ai-indol.vercel.app" # Deployed frontend Origin
 ]
 
 app.add_middleware(
@@ -48,10 +48,11 @@ os.makedirs(UPLOAD_DIRECTORY, exist_ok=True)
 
 @app.post("/upload/", response_model=schemas.Document)
 async def upload_file(file: UploadFile = File(...), db: Session = Depends(get_db)):
+    # Check if the uploaded file is a PDF
     if file.content_type != 'application/pdf':
         raise HTTPException(status_code=400, detail="Only PDF files are allowed.")
     
-    # Fetch all documents and delete them
+    # Fetch all documents and delete them from the database and filesystem
     existing_documents = crud.get_documents(db)
     for doc in existing_documents:
         file_path = doc.file_path
@@ -64,7 +65,7 @@ async def upload_file(file: UploadFile = File(...), db: Session = Depends(get_db
     with open(file_location, "wb") as f:
         shutil.copyfileobj(file.file, f)
 
-    # Create the document metadata entry
+    # Create the document metadata entry in the database
     document = schemas.DocumentCreate(filename=file.filename, file_path=file_location)
     db_document = crud.create_document(db=db, document=document)
 
@@ -72,12 +73,14 @@ async def upload_file(file: UploadFile = File(...), db: Session = Depends(get_db
 
 @app.post("/answer/{document_id}/", response_model=schemas.AnswerResponse)
 async def get_pdf_text(document_id: int, request: schemas.QuestionRequest, db: Session = Depends(get_db)):
+    # Fetch the document from the database
     document = crud.get_document(db, document_id=document_id)
     if not document:
         raise HTTPException(status_code=404, detail="Document not found.")
     
     pdf_path = document.file_path
 
+    # Check if the PDF file exists
     if not os.path.exists(pdf_path):
         raise HTTPException(status_code=404, detail=f"PDF file not found at {pdf_path}")
     
@@ -92,9 +95,11 @@ async def get_pdf_text(document_id: int, request: schemas.QuestionRequest, db: S
             else:
                 logger.warning(f"Failed to extract text from page {page_number}")
         
+        # Check if any text was extracted from the PDF
         if not text:
             raise HTTPException(status_code=400, detail="No text extracted from the PDF.")
         
+        # Get the answer to the question from the extracted text
         answer = answer_question(text, request.question)
         return {"document_id": document_id, "answer": answer}
     except Exception as e:
@@ -102,35 +107,31 @@ async def get_pdf_text(document_id: int, request: schemas.QuestionRequest, db: S
 
 @app.delete("/text/{document_id}/")
 async def delete_pdf(document_id: int, db: Session = Depends(get_db)):
+    # Fetch the document from the database
     document = crud.get_document(db, document_id=document_id)
     if not document:
         raise HTTPException(status_code=404, detail="Document not found.")
     
     file_path = document.file_path
+    # Check if the PDF file exists and delete it
     if os.path.exists(file_path):
         os.remove(file_path)
     
+    # Delete the document metadata from the database
     crud.delete_document(db=db, document_id=document_id)
     
     return {"detail": "Document deleted successfully"}
 
 @app.get("/document/first")
 async def get_first_document(db: Session = Depends(get_db)):
-    document_id = 1  # Specify the ID you want to fetch
+    # Fetch the first document from the database
+    document_id = 1  
     document = crud.get_document_by_id(db, document_id)
     if not document:
         return "no document"
     return document
-    # {
-    # "id": 1,
-    # "filename": "example.pdf",
-    # "file_path": "uploaded_files/example.pdf"
-    # }
-
-
-
 
 if __name__ == "__main__":
     import uvicorn
-    port = int(os.getenv("PORT", 8000))
-    uvicorn.run(app, host="0.0.0.0", port=port)
+    port = int(os.getenv("PORT", 8000))  
+    uvicorn.run(app, host="0.0.0.0", port=port)  
