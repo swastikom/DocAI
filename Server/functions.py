@@ -26,40 +26,40 @@ load_dotenv()
 genai.configure(api_key=os.environ.get("GOOGLE_API_KEY"))
 
 
-def answer_question_ollama(raw_text, question):
-  # Split the text into chunks using a character-based splitter
-  text_splitter = CharacterTextSplitter(
-      separator="\n",  # Split the text at newline characters
-      chunk_size=1000,  # Maximum size of each chunk
-      chunk_overlap=200,  # Overlap between consecutive chunks
-      length_function=len,  # Function to calculate the length of each chunk
-  )
+# def answer_question_ollama(raw_text, question):
+#   # Split the text into chunks using a character-based splitter
+#   text_splitter = CharacterTextSplitter(
+#       separator="\n",  # Split the text at newline characters
+#       chunk_size=1000,  # Maximum size of each chunk
+#       chunk_overlap=200,  # Overlap between consecutive chunks
+#       length_function=len,  # Function to calculate the length of each chunk
+#   )
 
-  texts = text_splitter.split_text(raw_text)  # Split the raw text into chunks
+#   texts = text_splitter.split_text(raw_text)  # Split the raw text into chunks
 
-  # embeddings from Ollama
-  embeddings = OllamaEmbeddings(model='nomic-embed-text')
+#   # embeddings from Ollama
+#   embeddings = OllamaEmbeddings(model='nomic-embed-text')
 
-  # Create a FAISS index from the text chunks and their embeddings
-  document_search = FAISS.from_texts(texts, embeddings)
+#   # Create a FAISS index from the text chunks and their embeddings
+#   document_search = FAISS.from_texts(texts, embeddings)
 
-  # LLM from Ollama
-  model_name = "llama3"
-  llm = ChatOllama(model=model_name)
+#   # LLM from Ollama
+#   model_name = "llama3"
+#   llm = ChatOllama(model=model_name)
 
-  # Load the question-answering chain with the OpenAI model
-  chain = load_qa_chain(llm,chain_type="stuff")
+#   # Load the question-answering chain with the OpenAI model
+#   chain = load_qa_chain(llm,chain_type="stuff")
 
-  # Perform a similarity search on the documents to find the most relevant chunks
-  docs = document_search.similarity_search(question)
+#   # Perform a similarity search on the documents to find the most relevant chunks
+#   docs = document_search.similarity_search(question)
 
-  # Use the question-answering chain to generate an answer based on the relevant documents
-  result = chain.invoke({"input_documents": docs, "question": question})
+#   # Use the question-answering chain to generate an answer based on the relevant documents
+#   result = chain.invoke({"input_documents": docs, "question": question})
 
-  # Extract the answer text from the result
-  answer = result["output_text"]
+#   # Extract the answer text from the result
+#   answer = result["output_text"]
 
-  return answer
+#   return answer
 
 
 def answer_question_gemini(raw_text, question):
@@ -80,7 +80,7 @@ def answer_question_gemini(raw_text, question):
   text_splitter = RecursiveCharacterTextSplitter(chunk_size=10000, chunk_overlap=500)
   texts = text_splitter.split_text(raw_text)
   embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001")
-  vector_index = Chroma.from_texts(texts, embeddings).as_retriever()
+  vector_index = FAISS.from_texts(texts, embeddings).as_retriever()
   docs = vector_index.invoke(question)
   stuff_answer = chain.invoke(
     {"input_documents": docs, "question": question}, return_only_outputs=True
