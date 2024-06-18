@@ -7,7 +7,7 @@ from sqlalchemy.orm import Session
 from pypdf import PdfReader
 from database import SessionLocal, engine
 import models, schemas, crud
-from functions import answer_question
+from functions import answer_question_gemini, answer_question_ollama
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -95,13 +95,16 @@ async def get_pdf_text(document_id: int, request: schemas.QuestionRequest, db: S
             else:
                 logger.warning(f"Failed to extract text from page {page_number}")
         
+        print(text)
         # Check if any text was extracted from the PDF
         if not text:
             raise HTTPException(status_code=400, detail="No text extracted from the PDF.")
         
         # Get the answer to the question from the extracted text
-        answer = answer_question(text, request.question)
-        return {"document_id": document_id, "answer": answer}
+        answer = answer_question_gemini(text,request.question)
+        if(answer=="answer not available in context"):
+            answer = answer_question_ollama(text, request.question)
+        return {"document_id": document_id, "text_from_pdf":text, "answer": answer}
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error processing PDF file: {e}")
 

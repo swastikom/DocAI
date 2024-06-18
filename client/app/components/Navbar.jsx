@@ -22,7 +22,7 @@ const Navbar = ({ onFileUpload }) => {
     setIsLoading(true); // Show loading indicator on delete button
     try {
       const response = await fetch(
-        `https://docai-zk2t.onrender.com/text/${data.id}/`,
+        `http://127.0.0.1:8000/text/${data.id}/`,
         {
           method: "DELETE",
         }
@@ -45,7 +45,7 @@ const Navbar = ({ onFileUpload }) => {
     const fetchData = async () => {
       try {
         const response = await fetch(
-          "https://docai-zk2t.onrender.com/document/first"
+          "http://127.0.0.1:8000/document/first"
         );
         const result = await response.json();
         setData(result); // Set fetched data
@@ -77,7 +77,7 @@ const Navbar = ({ onFileUpload }) => {
     formData.append("file", selectedFile); // Append selected file to form data
 
     try {
-      const response = await fetch("https://docai-zk2t.onrender.com/upload/", {
+      const response = await fetch("http://127.0.0.1:8000/upload/", {
         method: "POST",
         body: formData,
       });

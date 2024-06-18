@@ -20,7 +20,7 @@ export default function Home() {
     const fetchData = async () => {
       try {
         const response = await fetch(
-          "https://docai-zk2t.onrender.com/document/first"
+          "http://127.0.0.1:8000/document/first"
         );
         const result = await response.json();
         setData(result); // Set fetched data
@@ -37,9 +37,9 @@ export default function Home() {
   if (loading) {
     return (
       <div className="h-full w-full flex items-center justify-center">
-        <span class="relative flex h-[10em] w-[10em] justify-center items-center">
-          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-          <span class="relative inline-flex rounded-full h-[60%] w-[60%] bg-green-500"></span>
+        <span className="relative flex h-[10em] w-[10em] justify-center items-center">
+          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+          <span className="relative inline-flex rounded-full h-[60%] w-[60%] bg-green-500"></span>
         </span> {/* Loading spinner */}
       </div>
     );

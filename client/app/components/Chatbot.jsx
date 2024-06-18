@@ -77,7 +77,7 @@ const Chatbot = (props) => {
 
       // Make API request to get bot's response
       const response = await axios.post(
-        `https://docai-zk2t.onrender.com/answer/${documentId}/`,
+        `http://127.0.0.1:8000/answer/${documentId}/`,
         {
           question: inputText,
         }
