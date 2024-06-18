@@ -9,10 +9,10 @@ from langchain_community.chat_models import ChatOllama
 # Google LLM
 
 import google.generativeai as genai
-from langchain import PromptTemplate
-from langchain.document_loaders import PyPDFLoader
+from langchain_core.prompts import PromptTemplate
+from langchain_community.document_loaders import PyPDFLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain.vectorstores import Chroma
+from langchain_community.vectorstores import Chroma
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_google_genai import GoogleGenerativeAIEmbeddings
 
