@@ -7,7 +7,7 @@ from sqlalchemy.orm import Session
 from pypdf import PdfReader
 from database import SessionLocal, engine
 import models, schemas, crud
-from functions import answer_question_gemini, answer_question_ollama
+from functions import answer_question_gemini, delete_chat_memory
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -101,9 +101,12 @@ async def get_pdf_text(document_id: int, request: schemas.QuestionRequest, db: S
             raise HTTPException(status_code=400, detail="No text extracted from the PDF.")
         
         # Get the answer to the question from the extracted text
+        print("\n\n Running Gemini function...")
         answer = answer_question_gemini(text,request.question)
-        if(answer=="answer not available in context"):
-            answer = answer_question_ollama(text, request.question)
+        # if answer in ("Answer not available in context", "answer not available in context"):
+        #      print("\n\n Running Ollama function...")
+        #      answer = answer_question_ollama(text, request.question)
+
         return {"document_id": document_id, "text_from_pdf":text, "answer": answer}
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error processing PDF file: {e}")
@@ -122,6 +125,7 @@ async def delete_pdf(document_id: int, db: Session = Depends(get_db)):
     
     # Delete the document metadata from the database
     crud.delete_document(db=db, document_id=document_id)
+    delete_chat_memory()
     
     return {"detail": "Document deleted successfully"}
 
